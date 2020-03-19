@@ -89,17 +89,14 @@ const short sSRFNAME      = 0x3a06;
 
 inline void gds2h (int16_t &s)
 {
-#if defined(__BYTE_ORDER__) && __BYTE_ORDER__==__ORDER_LITTLE_ENDIAN__
+  #if defined(__BYTE_ORDER__) && __BYTE_ORDER__==__ORDER_LITTLE_ENDIAN__
   //  swap required 
-  char x;
-  char *d = (char *)&s;
-  x = d[0]; d[0] = d[1]; d[1] = x;
-#elif defined(__BYTE_ORDER__) && __BYTE_ORDER__==__ORDER_BIG_ENDIAN__
-  //  .. no action required
-#else
+  s = int16_t( s << 8 & 0xff00) | int16_t( s >> 8 & 0x00ff);
+  #elif defined(__BYTE_ORDER__) && __BYTE_ORDER__==__ORDER_BIG_ENDIAN__
+  #else
   //  generic solution
-  s = (int16_t (((unsigned char *)&s) [0]) << 8) | int16_t (((unsigned char *)&s) [1]);
-#endif
+  s = int16_t( s << 8 & 0xff00) | int16_t( s >> 8 & 0x00ff);
+  #endif
 }
 
 inline void gds2h (int32_t &i)
